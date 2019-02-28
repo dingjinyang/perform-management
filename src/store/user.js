@@ -1,5 +1,6 @@
-import { login, getUserInfo } from "../api/user";
+import { login, getUserInfo, logout } from "../api/user";
 import { getToken, setToken, removeToken } from "../util/token";
+import { resolve } from "q";
 
 const user = {
   state: {
@@ -53,7 +54,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo()
           .then(res => {
-            const data = res.data;
+            const data = res.userInfo;
             if (data.roles && data.roles.length > 0) {
               // 验证返回的roles是否是一个非空数组
               commit("SET_ROLES", data.roles);
@@ -76,8 +77,15 @@ const user = {
      * @returns {Promise<void>}
      */
     fontLogout({ commit }) {
-      commit("SET_TOKEN", "");
-      removeToken();
+      return new Promise(resolve => {
+        logout().then(res => {
+          if (res.code === 200) {
+            removeToken();
+            commit("SET_TOKEN","")
+            resolve("success");
+          }
+        });
+      });
     }
   }
 };

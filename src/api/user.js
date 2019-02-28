@@ -9,3 +9,7 @@ export function login(loginForm) {
 export function getUserInfo() {
   return _axios.get("/userInfo");
 }
+
+export function logout() {
+  return _axios.get("/logout");
+}

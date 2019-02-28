@@ -6,19 +6,23 @@
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12">
               <v-toolbar dark color="primary">
-                <v-toolbar-title>用户登陆</v-toolbar-title>
+                <v-toolbar-title>科研业绩量化系统</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <!-- <v-tooltip bottom>
-                  <v-btn icon large :href="source" target="_blank" slot="activator">
-                    <v-icon large>code</v-icon>
-                  </v-btn>
-                  <span>Source</span>
-                </v-tooltip>-->
+                <v-toolbar-title right>用户登陆</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
                   <v-text-field
+                    v-model="loginForm.username"
+                    readonly
+                    prepend-icon="person"
+                    name="login"
+                    label="Login"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    readonly
+                    v-model="loginForm.password"
                     prepend-icon="lock"
                     name="password"
                     label="Password"
@@ -36,6 +40,14 @@
         </v-layout>
       </v-container>
     </v-content>
+    <v-snackbar color="success" bottom v-model="snackbar" timeout="2000" dark>
+      <v-icon color="white" class="mr-3">mdi-bell-plus</v-icon>
+      <div>
+        登陆成功！ 欢迎来到
+        <b>科研业绩量化系统</b>
+      </div>
+      <v-icon size="16" @click="snackbar = false">mdi-close-circle</v-icon>
+    </v-snackbar>
   </v-app>
 </template>
 <script>
@@ -49,24 +61,26 @@ export default {
     loginForm: {
       username: "admin",
       password: "admin"
-    }
+    },
+    snackbar: false
   }),
   methods: {
     handleLogin() {
       const _this = this;
-      _this.loading = true;
       this.$store
         .dispatch("login", _this.loginForm)
         .then(res => {
-          console.log(res);
-          _this.loginSuccess(_this.loginForm.username);
+          if (res.code === 200) {
+            _this.loginSuccess(_this.loginForm.username);
+          }
         })
-        .finally(() => {
-          _this.loading = false;
-        });
+        .finally(() => {});
     },
     loginSuccess(username = "admin") {
-      this.$router.push("/");
+      this.snackbar = true;
+      setTimeout(_ => {
+        this.$router.push("/");
+      }, 2000);
     }
   }
 };

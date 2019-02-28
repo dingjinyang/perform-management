@@ -55,11 +55,24 @@
           <v-icon dark>notifications</v-icon>
         </v-avatar>
       </v-badge>
-      <v-btn icon>
+      <v-menu bottom offset-y transition="scale-transition">
+        <v-btn slot="activator" dark icon>
+          <v-avatar size="32px">
+            <img src="@/assets/logo.png" alt="Vuetify">
+          </v-avatar>
+        </v-btn>
+        <!-- <v-btn slot="activator" dark color="primary">Scale Transition</v-btn> -->
+        <v-list>
+          <v-list-tile v-for="(item,index) in menuItems" :key="index" @click="menuClick(index)">
+            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+      <!-- <v-btn icon @click="logout()">
         <v-avatar size="32px">
           <img src="@/assets/logo.png" alt="Vuetify">
         </v-avatar>
-      </v-btn>
+      </v-btn>-->
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
@@ -74,9 +87,6 @@
         </v-layout>
       </v-container>
     </v-content>
-    <v-btn fab bottom right color="pink" dark fixed @click.stop="alert('哈哈！')">
-      <v-icon>add</v-icon>
-    </v-btn>
   </v-app>
 </template>
 
@@ -100,7 +110,25 @@ export default {
       }
     ],
     menuItems: [{ title: "个人中心" }, { title: "退出" }]
-  })
+  }),
+  methods: {
+    menuClick(index) {
+      if (index === 1) {
+        this.logout();
+      }
+    },
+    logout() {
+      this.$store
+        .dispatch("fontLogout")
+        .then(res => {
+          if (res === "success") {
+            // this.$router.push("/login");
+            location.reload();
+          }
+        })
+        .finally(() => {});
+    }
+  }
 };
 </script>
 

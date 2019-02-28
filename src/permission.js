@@ -31,7 +31,7 @@ router.beforeEach((to, from, next) => {
       store
         .dispatch("getUserInfo")
         .then(async res => {
-          const roles = res.data.roles;
+          const roles = res.userInfo.roles;
           /// 根据角色生成可访问路由表
           await store.dispatch("generateRouters", { roles });
           /// 添加到 router
@@ -41,7 +41,7 @@ router.beforeEach((to, from, next) => {
         })
         .catch(async err => {
           await store.dispatch("fontLogout");
-          Message.error(err || "认证失败，请重新登陆");
+          alert(err || "认证失败，请重新登陆");
           next({ path: "/" });
         });
       // }
