@@ -20,6 +20,7 @@
                 <v-list-tile-title>{{ item.text }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+
             <v-list-tile v-for="(child, i) in item.children" :key="i" @click>
               <v-list-tile-action v-if="child.icon">
                 <v-icon>{{ child.icon }}</v-icon>
@@ -46,10 +47,7 @@
         <span class="hidden-sm-and-down">科研业绩量化系统</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>apps</v-icon>
-      </v-btn>
-      <v-badge overlap color="red" @click="alert('haha')">
+      <v-badge overlap color="red">
         <span slot="badge">3</span>
         <v-avatar>
           <v-icon dark>notifications</v-icon>
@@ -99,14 +97,16 @@ export default {
     drawer: null,
     items: [
       { heading: "首页" },
-      { icon: "history", text: "Frequently contacted" },
-      { icon: "content_copy", text: "Duplicates" },
+      { icon: "content_copy", text: "科研申报" },
       {
         icon: "keyboard_arrow_up",
         "icon-alt": "keyboard_arrow_down",
-        text: "Labels",
+        text: "项目管理",
         model: true,
-        children: [{ icon: "add", text: "Create label" }]
+        children: [
+          { icon: "add", text: "添加" },
+          { icon: "delete", text: "删除" }
+        ]
       }
     ],
     menuItems: [{ title: "个人中心" }, { title: "退出" }]
