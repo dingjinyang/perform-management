@@ -57,7 +57,8 @@ export const asyncRouterMap = [
         meta: { text: "论文", icon: "content_copy" }
       }
     ]
-  }
+  },
+  { path: "*", redirect: "/404", hideInMenu: true }
 ];
 
 export default new Router({

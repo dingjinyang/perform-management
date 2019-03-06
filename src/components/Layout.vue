@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer fixed :clipped="$vuetify.breakpoint.mdAndUp" app v-model="drawer">
-      <v-list dense>
+      <v-list>
         <template v-for="item in items">
           <v-layout row v-if="item.heading" align-center :key="item.heading">
             <v-flex xs6>
@@ -71,7 +71,7 @@
       </v-menu>
     </v-toolbar>
     <v-content>
-      <v-container fluid fill-height>
+      <v-container fluid>
         <router-view/>
       </v-container>
     </v-content>
@@ -85,21 +85,8 @@ export default {
     source: String
   },
   data: () => ({
-    drawer: null,
-    items: [
-      // { path: "/", meta: { icon: "home", text: "首页" } },
-      // {
-      //   meta: {
-      //     text: "科研申报",
-      //     icon: "keyboard_arrow_up",
-      //     "icon-alt": "keyboard_arrow_down"
-      //   },
-      //   model: true,
-      //   children: [
-      //     { path: "scientific", meta: { icon: "content_copy", text: "论文" } }
-      //   ]
-      // }
-    ],
+    drawer: true,
+    items: [],
     menuItems: [{ title: "个人中心" }, { title: "退出" }]
   }),
   methods: {
