@@ -7,7 +7,7 @@ export default {
   }),
   getUserInfo: Mock.mock("/userInfo", {
     code: 200,
-    userInfo: {
+    info: {
       roles: ["admin"],
       name: "admin",
       avatar:

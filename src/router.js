@@ -8,32 +8,26 @@ Vue.use(Router);
  * model: list-group 是否自动展开
  */
 export const constantRouterMap = [
-  { path: "/404", component: () => import("./views/404"), hideInMenu: true },
   {
     path: "/login",
     name: "login",
     hideInMenu: true,
     component: () => import("./views/Login.vue")
   },
+  { path: "/404", component: () => import("./views/404"), hideInMenu: true },
   {
     path: "/",
     component: Layout,
+    redirect: "dashboard",
     name: "Dashboard",
     hideInMenu: true,
-    meta: { text: "首页", icon: "home" },
+    // meta: { text: "首页", icon: "home" },
     children: [
       {
-        path: "/dashboard",
-        hideInMenu: false,
-        meta: { icon: "content_copy", text: "论文" },
+        path: "dashboard",
         component: () => import("./views/Dashboard")
       }
     ]
-  },
-  {
-    path: "/dashboard",
-    meta: { text: "首页", icon: "home" },
-    hideInMenu: false
   }
 ];
 
@@ -55,6 +49,18 @@ export const asyncRouterMap = [
         name: "Paper",
         component: () => import("./views/scientific/Paper"),
         meta: { text: "论文", icon: "content_copy" }
+      }
+    ]
+  },
+  {
+    component: Layout,
+    path: "/",
+    name: "Personal",
+    hideInMenu: true,
+    children: [
+      {
+        path: "/personal",
+        component: () => import("./views/Personal")
       }
     ]
   },

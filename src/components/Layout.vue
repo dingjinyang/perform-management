@@ -64,7 +64,7 @@
           </v-avatar>
         </v-btn>
         <v-list>
-          <v-list-tile v-for="(item,index) in menuItems" :key="index" @click="menuClick(index)">
+          <v-list-tile v-for="(item,index) in menuItems" :key="index" @click="item.action.call()">
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -72,7 +72,9 @@
     </v-toolbar>
     <v-content>
       <v-container fluid>
-        <router-view/>
+        <v-fade-transition leave-absolute>
+          <router-view/>
+        </v-fade-transition>
       </v-container>
     </v-content>
   </v-app>
@@ -80,21 +82,33 @@
 
 <script>
 import { mapGetters } from "vuex";
+
 export default {
   props: {
     source: String
   },
-  data: () => ({
-    drawer: true,
-    items: [],
-    menuItems: [{ title: "个人中心" }, { title: "退出" }]
-  }),
-  methods: {
-    menuClick(index) {
-      if (index === 1) {
-        this.logout();
+  data() {
+    const actions = [
+      {
+        title: "个人中心",
+        action: () => {
+          this.routerPush("/personal");
+        }
+      },
+      {
+        title: "退出",
+        action: () => {
+          this.logout();
+        }
       }
-    },
+    ];
+    return {
+      drawer: false,
+      items: [],
+      menuItems: actions
+    };
+  },
+  methods: {
     logout() {
       this.$store
         .dispatch("fontLogout")

@@ -40,7 +40,7 @@
         </v-layout>
       </v-container>
     </v-content>
-    <v-snackbar color="success" bottom v-model="snackbar" timeout="2000" dark>
+    <v-snackbar color="success" bottom v-model="snackbar" :timeout="2000" dark>
       <v-icon color="white" class="mr-3">mdi-bell-plus</v-icon>
       <div>
         登陆成功！ 欢迎来到
