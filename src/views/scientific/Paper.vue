@@ -6,7 +6,7 @@
         <v-spacer></v-spacer>
         <v-text-field v-model="search" append-icon="search" label="查询" single-line hide-details></v-text-field>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="800px">
+        <v-dialog v-model="dialog" lazy persistent max-width="800px">
           <template v-slot:activator="{ on }">
             <v-btn color="primary" dark class="mb-2" v-on="on">添加</v-btn>
           </template>
@@ -15,55 +15,61 @@
               <span class="headline">{{ formTitle }}</span>
             </v-card-title>
             <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.mainpeople" label="负责人"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-select
-                      persistent-hint
-                      return-object
-                      single-line
-                      v-model="editedItem.mpeopledepartment"
-                      :items="departmentItems"
-                      item-text="name"
-                      item-value="id"
-                      label="部门"
-                    ></v-select>
-                    <!-- <v-text-field v-model="editedItem.mpeopledepartment" label="所属部门"></v-text-field> -->
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.papername" label="论文名称"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-select
-                      v-model="editedItem.studentdepartment"
-                      :items="departmentItems"
-                      attach
-                      label="学生院系"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.studentclass" label="学生班级"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.studentid" label="学生学号"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.studentname" label="学生姓名"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6>
-                    <v-select
-                      :menu-props="{ maxHeight: '130' }"
-                      v-model="editedItem.rewordtype"
-                      :items="rewordtypeItems"
-                      attach
-                      label="奖项"
-                    ></v-select>
-                  </v-flex>
-                </v-layout>
-              </v-container>
+              <v-form ref="form" lazy-validation>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-flex xs12 sm6 md4>
+                      <v-text-field v-model="editedItem.mainpeople" label="负责人" readonly></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-select
+                        persistent-hint
+                        attach
+                        v-model="editedItem.mpeopledepartment"
+                        :items="departmentItems"
+                        label="部门"
+                      ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-text-field v-model="editedItem.papername" label="论文名称" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-text-field
+                        v-model="editedItem.studentid"
+                        label="学生学号"
+                        counter
+                        maxlength="12"
+                        :rules="formRules.studentIdRules"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-select
+                        v-model="editedItem.studentdepartment"
+                        :items="departmentItems"
+                        attach
+                        readonly
+                        label="学生院系"
+                      ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-text-field v-model="editedItem.studentclass" label="学生班级" readonly></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-text-field v-model="editedItem.studentname" label="学生姓名" readonly></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-select
+                        :menu-props="{ maxHeight: '130' }"
+                        v-model="editedItem.rewordtype"
+                        :items="rewordtypeItems"
+                        attach
+                        label="奖项"
+                      ></v-select>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </v-form>
             </v-card-text>
 
             <v-card-actions>
@@ -120,11 +126,13 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { resolve } from "q";
 export default {
   data: () => ({
     dialog: false,
     loading: false,
     search: "",
+    /** 表格头部 */
     headers: [
       {
         text: "序号",
@@ -146,7 +154,8 @@ export default {
     ],
     desserts: [],
     editedIndex: -1,
-    departmentItems: ["软件学院"],
+    /** 部门选项 */
+    departmentItems: ["软件学院", "计算机学院"],
     rewordtypeItems: ["一等奖", "其他"],
     editedItem: {
       mainpeople: "",
@@ -167,6 +176,13 @@ export default {
       studentid: "",
       studentname: "",
       rewordtype: ""
+    },
+    /** 学号验证规则 */
+    formRules: {
+      studentIdRules: [
+        v => !!v || "学号必须填写！",
+        v => v.length <= 12 || "学号不能超过12位！"
+      ]
     }
   }),
   computed: {
@@ -177,7 +193,27 @@ export default {
   },
   watch: {
     dialog(val) {
+      if (val) {
+        /** 初始化表单默认值 */
+        this.editedItem.mainpeople = this.userInfo.name;
+        this.editedItem.mpeopledepartment = this.userInfo.department;
+      }
       val || this.close();
+    },
+    "editedItem.studentid": {
+      handler() {
+        if (this.editedItem.studentid.length === 12) {
+          this.fetchStudentInfo(this.editedItem.studentid).then(res => {
+            this.editedItem.studentname = res.studentname;
+            this.editedItem.studentclass = res.studentclass;
+            this.editedItem.studentdepartment = res.studentdepartment;
+          });
+        } else {
+          this.editedItem.studentname = "";
+          this.editedItem.studentclass = "";
+          this.editedItem.studentdepartment = "";
+        }
+      }
     }
   },
   created() {
@@ -189,7 +225,7 @@ export default {
         this.desserts.push({
           index: 1,
           mainpeople: "赵冬",
-          mpeopledepartment: "网络安全教研室",
+          mpeopledepartment: "软件学院",
           papername: "科研业绩量化",
           studentdepartment: "软件学院",
           studentclass: "RB软工卓越161",
@@ -199,6 +235,17 @@ export default {
           point: 0
         });
       }
+    },
+    fetchStudentInfo(id) {
+      return new Promise(resolve => {
+        setTimeout(_ => {
+          resolve({
+            studentdepartment: "软件学院",
+            studentclass: "RB软工卓越161",
+            studentname: "丁魏武"
+          });
+        }, 1000);
+      });
     },
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
@@ -224,11 +271,10 @@ export default {
         this.desserts.push(this.editedItem);
       }
       this.close();
+    },
+    validateField() {
+      this.$refs.form.validate();
     }
-  },
-  beforeMount() {
-    this.editedItem.mainpeople = this.userInfo.name;
-    this.editedItem.mpeopledepartment = this.userInfo.department;
   }
 };
 </script>

@@ -12,7 +12,7 @@ export default {
       name: "admin",
       avatar:
         "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-      department: { id: 1, name: "软件学院" },
+      department: "软件学院",
       jobNumber: "5771"
     }
   }),

@@ -4,18 +4,15 @@
       <v-layout wrap justify-space-between>
         <v-flex xs12 md6>
           <v-form ref="form">
-            <v-text-field v-model="userForm.name" label="用户名" disabled></v-text-field>
-            <v-text-field v-model="userForm.jobNumber" label="工号" disabled></v-text-field>
+            <v-text-field v-model="userForm.name" label="用户名" readonly></v-text-field>
+            <v-text-field v-model="userForm.jobNumber" label="工号" readonly></v-text-field>
             <v-select
               persistent-hint
-              return-object
               single-line
               v-model="userForm.department"
               :items="departmentItems"
-              item-text="name"
-              item-value="id"
               label="部门"
-              disabled
+              readonly
             ></v-select>
             <v-btn color="warning">修改</v-btn>
             <v-btn color="success">保存</v-btn>
@@ -33,14 +30,11 @@ export default {
     /** 用户信息表单 */
     userForm: {
       name: "",
-      department: { value: 1, text: "软件学院" },
+      department: "软件学院" ,
       jobNumber: ""
     },
     /** 部门选项 */
-    departmentItems: [
-      { value: 1, text: "软件学院" },
-      { value: 2, text: "计算机学院" }
-    ]
+    departmentItems: ["软件学院", "计算机学院"],
   }),
   methods: {},
   computed: {
