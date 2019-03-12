@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 const getters = {
   token: state => state.user.token,
-  info: state => state.user.info,
+  userInfo: state => state.user.info,
   permissionRouters: state => state.permission.routers,
   addRouters: state => state.permission.addRouters
 };

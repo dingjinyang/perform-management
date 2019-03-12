@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-toolbar flat color="white">
-        <v-toolbar-title>教研论文信息类明细表</v-toolbar-title>
+        <v-toolbar-title>校级优秀毕业设计论文明细表</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-text-field v-model="search" append-icon="search" label="查询" single-line hide-details></v-text-field>
         <v-spacer></v-spacer>
@@ -21,7 +21,17 @@
                     <v-text-field v-model="editedItem.mainpeople" label="负责人"></v-text-field>
                   </v-flex>
                   <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.mpeopledepartment" label="所属部门"></v-text-field>
+                    <v-select
+                      persistent-hint
+                      return-object
+                      single-line
+                      v-model="editedItem.mpeopledepartment"
+                      :items="departmentItems"
+                      item-text="name"
+                      item-value="id"
+                      label="部门"
+                    ></v-select>
+                    <!-- <v-text-field v-model="editedItem.mpeopledepartment" label="所属部门"></v-text-field> -->
                   </v-flex>
                   <v-flex xs12 sm6 md4>
                     <v-text-field v-model="editedItem.papername" label="论文名称"></v-text-field>
@@ -109,6 +119,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     dialog: false,
@@ -136,12 +147,7 @@ export default {
     desserts: [],
     editedIndex: -1,
     departmentItems: ["软件学院"],
-    rewordtypeItems: [
-      "校级优秀毕业设计论文/一等奖",
-      "校级优秀毕业设计论文/其他",
-      "教学改革研究论文/核心期刊",
-      "教学改革研究论文/其他"
-    ],
+    rewordtypeItems: ["一等奖", "其他"],
     editedItem: {
       mainpeople: "",
       mpeopledepartment: "",
@@ -164,6 +170,7 @@ export default {
     }
   }),
   computed: {
+    ...mapGetters(["userInfo"]),
     formTitle() {
       return this.editedIndex === -1 ? "添加" : "修改";
     }
@@ -218,6 +225,10 @@ export default {
       }
       this.close();
     }
+  },
+  beforeMount() {
+    this.editedItem.mainpeople = this.userInfo.name;
+    this.editedItem.mpeopledepartment = this.userInfo.department;
   }
 };
 </script>

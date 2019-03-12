@@ -25,13 +25,13 @@ router.beforeEach((to, from, next) => {
     //   NProgress.done();
     // } else {
     /// 判断当前用户是否已经获取userInfo
-    if (store.getters.info.roles.length !== 0) {
+    if (store.getters.userInfo.roles.length !== 0) {
       next();
     } else {
       store
         .dispatch("getUserInfo")
         .then(async res => {
-          const roles = res.info.roles;
+          const roles = res.data.roles;
           /// 根据角色生成可访问路由表
           await store.dispatch("generateRouters", { roles });
           /// 添加到 router

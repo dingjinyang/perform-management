@@ -72,7 +72,7 @@
     </v-toolbar>
     <v-content>
       <v-container fluid>
-        <v-fade-transition leave-absolute>
+        <v-fade-transition>
           <router-view/>
         </v-fade-transition>
       </v-container>

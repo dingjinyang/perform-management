@@ -2,26 +2,23 @@
   <v-app id="inspire">
     <v-container grid-list-xl>
       <v-layout wrap justify-space-between>
-        <v-flex xs12 md4>
-          <v-form ref="form" v-model="valid" lazy-validation>
-            <v-text-field v-model="name" :counter="10" :rules="nameRules" label="Name" required></v-text-field>
-            <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
+        <v-flex xs12 md6>
+          <v-form ref="form">
+            <v-text-field v-model="userForm.name" label="用户名" disabled></v-text-field>
+            <v-text-field v-model="userForm.jobNumber" label="工号" disabled></v-text-field>
             <v-select
-              v-model="select"
-              :items="items"
-              :rules="[v => !!v || 'Item is required']"
-              label="Item"
-              required
+              persistent-hint
+              return-object
+              single-line
+              v-model="userForm.department"
+              :items="departmentItems"
+              item-text="name"
+              item-value="id"
+              label="部门"
+              disabled
             ></v-select>
-            <v-checkbox
-              v-model="checkbox"
-              :rules="[v => !!v || 'You must agree to continue!']"
-              label="Do you agree?"
-              required
-            ></v-checkbox>
-            <v-btn :disabled="!valid" color="success" @click="validate">Validate</v-btn>
-            <v-btn color="error" @click="reset">Reset Form</v-btn>
-            <v-btn color="warning" @click="resetValidation">Reset Validation</v-btn>
+            <v-btn color="warning">修改</v-btn>
+            <v-btn color="success">保存</v-btn>
           </v-form>
         </v-flex>
       </v-layout>
@@ -29,40 +26,33 @@
   </v-app>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "Personal",
   data: () => ({
-    valid: true,
-    userInfo: null,
-    name: "",
-    nameRules: [
-      v => !!v || "Name is required",
-      v => (v && v.length <= 10) || "Name must be less than 10 characters"
-    ],
-    email: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+/.test(v) || "E-mail must be valid"
-    ],
-    select: null,
-    items: ["Item 1", "Item 2", "Item 3", "Item 4"],
-    checkbox: false
+    /** 用户信息表单 */
+    userForm: {
+      name: "",
+      department: { value: 1, text: "软件学院" },
+      jobNumber: ""
+    },
+    /** 部门选项 */
+    departmentItems: [
+      { value: 1, text: "软件学院" },
+      { value: 2, text: "计算机学院" }
+    ]
   }),
-  methods: {
-    validate() {
-      if (this.$refs.form.validate()) {
-        this.snackbar = true;
-      }
-    },
-    reset() {
-      this.$refs.form.reset();
-    },
-    resetValidation() {
-      this.$refs.form.resetValidation();
-    }
+  methods: {},
+  computed: {
+    ...mapGetters(["userInfo"])
   },
-  mounted() {
-    console.log(this.$store.user);
+  beforeMount() {
+    /* 从store中获取当前表单中需要的用户信息 */
+    for (const key in this.userForm) {
+      if (this.userInfo.hasOwnProperty(key)) {
+        this.userForm[key] = this.userInfo[key];
+      }
+    }
   }
 };
 </script>
