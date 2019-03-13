@@ -37,7 +37,7 @@ export const asyncRouterMap = [
     component: Layout,
     name: "Scientific",
     meta: {
-      text: "科研申报",
+      text: "科研论文",
       icon: "keyboard_arrow_up",
       "icon-alt": "keyboard_arrow_down"
     },
