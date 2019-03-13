@@ -31,7 +31,7 @@ export default {
   getPaperPoint: Mock.mock("/getPaperPoint", {
     code: 200,
     data: {
-      point: 54
+      point: 50
     }
   }),
   /** 用户登出 */
