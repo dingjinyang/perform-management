@@ -15,7 +15,7 @@
               <span class="headline">{{ formTitle }}</span>
             </v-card-title>
             <v-card-text>
-              <v-form ref="form" lazy-validation>
+              <v-form ref="form" v-model="valid" lazy-validation>
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <v-flex xs12 sm6 md4>
@@ -31,15 +31,27 @@
                       ></v-select>
                     </v-flex>
                     <v-flex xs12 sm6 md4>
-                      <v-text-field v-model="editedItem.papername" label="论文名称" required></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.papername"
+                        label="论文名称"
+                        :rules="formRules.papername"
+                        clearable
+                        required
+                      ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md4>
                       <v-text-field
+                        ref="studentid"
                         v-model="editedItem.studentid"
+                        persistent-hint
+                        hint="输入学号查询学生信息"
                         label="学生学号"
+                        append-outer-icon="search"
+                        @click:append-outer="fetchStudentInfo(editedItem.studentid)"
                         counter
                         maxlength="12"
-                        :rules="formRules.studentIdRules"
+                        :rules="formRules.studentid"
+                        clearable
                         required
                       ></v-text-field>
                     </v-flex>
@@ -58,14 +70,26 @@
                     <v-flex xs12 sm6 md4>
                       <v-text-field v-model="editedItem.studentname" label="学生姓名" readonly></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6>
+                    <v-flex xs12 sm6 md4>
                       <v-select
                         :menu-props="{ maxHeight: '130' }"
                         v-model="editedItem.rewordtype"
                         :items="rewordtypeItems"
                         attach
+                        :rules="formRules.rewordtype"
                         label="奖项"
+                        required
                       ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-text-field
+                        v-model="editedItem.point"
+                        persistent-hint
+                        hint="点击查询得分"
+                        label="总绩点"
+                        append-outer-icon="send"
+                        @click:append-outer="fetchPoint({type:`校级优秀毕业设计论文`,grade:editedItem.rewordtype})"
+                      ></v-text-field>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -74,8 +98,9 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="close">取消</v-btn>
-              <v-btn color="blue darken-1" flat @click="save">保存</v-btn>
+              <v-btn color="warning" @click="reset">重置</v-btn>
+              <v-btn color="error" @click="close">取消</v-btn>
+              <v-btn :disabled="!valid" color="success" @click="save">保存</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -126,9 +151,11 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { resolve } from "q";
+// import { getStudentInfoById } from "../../api/user";
 export default {
+  name: "StudentPaper",
   data: () => ({
+    valid: true,
     dialog: false,
     loading: false,
     search: "",
@@ -165,7 +192,8 @@ export default {
       studentclass: "",
       studentid: "",
       studentname: "",
-      rewordtype: ""
+      rewordtype: "",
+      point: ""
     },
     defaultItem: {
       mainpeople: "",
@@ -175,14 +203,18 @@ export default {
       studentclass: "",
       studentid: "",
       studentname: "",
-      rewordtype: ""
+      rewordtype: "一等奖",
+      point: ""
     },
     /** 学号验证规则 */
     formRules: {
-      studentIdRules: [
-        v => !!v || "学号必须填写！",
-        v => v.length <= 12 || "学号不能超过12位！"
-      ]
+      papername: [v => !!v || "请填写论文名称！"],
+      studentid: [
+        v => !!v || "请填写学号！",
+        v => /\d$/.test(v) || "有非法字符，学号必须为数字！",
+        v => (v && v.length === 12) || "学号必须为12位！"
+      ],
+      rewordtype: [v => !!v || "请选择奖项！"]
     }
   }),
   computed: {
@@ -195,25 +227,11 @@ export default {
     dialog(val) {
       if (val) {
         /** 初始化表单默认值 */
-        this.editedItem.mainpeople = this.userInfo.name;
-        this.editedItem.mpeopledepartment = this.userInfo.department;
+        this.$nextTick(_ => {
+          this.reset();
+        });
       }
       val || this.close();
-    },
-    "editedItem.studentid": {
-      handler() {
-        if (this.editedItem.studentid.length === 12) {
-          this.fetchStudentInfo(this.editedItem.studentid).then(res => {
-            this.editedItem.studentname = res.studentname;
-            this.editedItem.studentclass = res.studentclass;
-            this.editedItem.studentdepartment = res.studentdepartment;
-          });
-        } else {
-          this.editedItem.studentname = "";
-          this.editedItem.studentclass = "";
-          this.editedItem.studentdepartment = "";
-        }
-      }
     }
   },
   created() {
@@ -237,15 +255,25 @@ export default {
       }
     },
     fetchStudentInfo(id) {
-      return new Promise(resolve => {
-        setTimeout(_ => {
-          resolve({
-            studentdepartment: "软件学院",
-            studentclass: "RB软工卓越161",
-            studentname: "丁魏武"
-          });
-        }, 1000);
-      });
+      if (!this.$refs.studentid.validate()) return;
+      this.$api.user
+        .getStudentInfoById(id)
+        .then(res => {
+          Object.assign(this.editedItem, res.data);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    },
+    fetchPoint(data) {
+      this.$api.user
+        .getPaperPoint(data)
+        .then(res => {
+          this.editedItem.point = res.data.point;
+          console.log(res);
+        })
+        .catch(err => {});
+      console.log(data);
     },
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
@@ -265,6 +293,7 @@ export default {
       }, 300);
     },
     save() {
+      if (!this.validate()) return;
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem);
       } else {
@@ -272,9 +301,22 @@ export default {
       }
       this.close();
     },
-    validateField() {
-      this.$refs.form.validate();
+    validate() {
+      return this.$refs.form.validate();
+    },
+    /** 重置表单 */
+    reset() {
+      this.editedItem = Object.assign({}, this.defaultItem);
+      this.resetValidation();
+    },
+    /** 重置表单验证 */
+    resetValidation() {
+      this.$refs.form.resetValidation();
     }
+  },
+  beforeMount() {
+    this.defaultItem.mainpeople = this.userInfo.name;
+    this.defaultItem.mpeopledepartment = this.userInfo.department;
   }
 };
 </script>

@@ -8,7 +8,7 @@ axios.defaults.headers.common["Authorization"] = getToken();
 let config = {
   baseURL: process.env.VUE_APP_APIURL,
   timeout: 3 * 1000, // Timeout
-  withCredentials: true // Check cross-site Access-Control
+  withCredentials: false // Check cross-site Access-Control
 };
 
 const _axios = axios.create(config);

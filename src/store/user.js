@@ -49,7 +49,6 @@ const user = {
           .then(res => {
             const data = res.data;
             if (data.roles && data.roles.length > 0) {
-              console.log(data);
               // 验证返回的roles是否是一个非空数组
               commit("SET_INFO", data);
             } else {
