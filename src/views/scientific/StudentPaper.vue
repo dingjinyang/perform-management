@@ -30,7 +30,7 @@
                         label="部门"
                       ></v-select>
                     </v-flex>
-                    <v-flex xs12 sm6 md4>
+                    <v-flex xs12  >
                       <v-text-field
                         v-model="editedItem.papername"
                         label="论文名称"
@@ -87,6 +87,7 @@
                         persistent-hint
                         hint="点击查询得分"
                         label="总绩点"
+                        readonly
                         append-outer-icon="send"
                         @click:append-outer="fetchPoint({type:`校级优秀毕业设计论文`,grade:editedItem.rewordtype})"
                       ></v-text-field>
@@ -206,14 +207,17 @@ export default {
       rewordtype: "一等奖",
       point: ""
     },
-    /** 学号验证规则 */
+    /** 表单验证规则 */
     formRules: {
+      /** 论文验证规则 */
       papername: [v => !!v || "请填写论文名称！"],
+      /** 学生Id验证规则 */
       studentid: [
         v => !!v || "请填写学号！",
         v => /\d$/.test(v) || "有非法字符，学号必须为数字！",
         v => (v && v.length === 12) || "学号必须为12位！"
       ],
+      /** 奖项验证规则 */
       rewordtype: [v => !!v || "请选择奖项！"]
     }
   }),
@@ -225,7 +229,7 @@ export default {
   },
   watch: {
     dialog(val) {
-      if (val) {
+      if (val && this.editedIndex === -1) {
         /** 初始化表单默认值 */
         this.$nextTick(_ => {
           this.reset();
@@ -241,7 +245,6 @@ export default {
     initialize() {
       for (let i = 0; i < 6; i++) {
         this.desserts.push({
-          index: 1,
           mainpeople: "赵冬",
           mpeopledepartment: "软件学院",
           papername: "科研业绩量化",
@@ -249,11 +252,14 @@ export default {
           studentclass: "RB软工卓越161",
           studentid: "201619150123",
           studentname: "丁魏武",
-          rewordtype: "校级优秀毕业设计论文/其他",
+          rewordtype: "一等奖",
           point: 0
         });
       }
     },
+    /**
+     * 获取学生信息
+     */
     fetchStudentInfo(id) {
       if (!this.$refs.studentid.validate()) return;
       this.$api.user
@@ -265,6 +271,9 @@ export default {
           console.error(err);
         });
     },
+    /**
+     * 获取业绩点
+     */
     fetchPoint(data) {
       this.$api.user
         .getPaperPoint(data)
@@ -275,11 +284,13 @@ export default {
         .catch(err => {});
       console.log(data);
     },
+    /** 编辑表单 */
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
+    /** 删除表单 */
     deleteItem(item) {
       const index = this.desserts.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
@@ -288,8 +299,7 @@ export default {
     close() {
       this.dialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
+        this.reset();
       }, 300);
     },
     save() {
@@ -307,6 +317,7 @@ export default {
     /** 重置表单 */
     reset() {
       this.editedItem = Object.assign({}, this.defaultItem);
+      this.editedIndex = -1;
       this.resetValidation();
     },
     /** 重置表单验证 */

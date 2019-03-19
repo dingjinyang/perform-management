@@ -46,13 +46,13 @@ export const asyncRouterMap = [
     children: [
       {
         path: "stupaper",
-        name: "Paper",
+        name: "StudentPaper",
         component: () => import("./views/scientific/StudentPaper"),
         meta: { text: "校级优秀毕业设计论文", icon: "content_copy" }
       },
       {
         path: "teapaper",
-        name: "Paper",
+        name: "TeacherPaper",
         component: () => import("./views/scientific/TeacherPaper"),
         meta: { text: "教学改革科研论文", icon: "content_copy" }
       }

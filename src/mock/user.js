@@ -3,7 +3,7 @@ export default {
   /** 用户登陆 */
   login: Mock.mock("/login", {
     code: 200,
-    username: "@NAME",
+    username: "@CNAME",
     token: "jwt-tocken"
   }),
   /** 获取用户信息 */
@@ -11,7 +11,7 @@ export default {
     code: 200,
     data: {
       roles: ["admin"],
-      name: "赵冬",
+      name: "@NAME",
       avatar:
         "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
       department: "软件学院",
