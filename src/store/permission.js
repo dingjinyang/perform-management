@@ -1,5 +1,5 @@
-import { asyncRouterMap, constantRouterMap } from "../router";
-
+import constantRouterMap from '@/router/common';
+import asyncRouterMap from '@/router/modules'
 const permission = {
   state: {
     routers: constantRouterMap,
