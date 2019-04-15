@@ -2,9 +2,13 @@ import router from "./router";
 import store from "./store";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { getToken } from "./util/token";
+import {
+  getToken
+} from "./util/token";
 
-NProgress.configure({ showSpinner: false });
+NProgress.configure({
+  showSpinner: false
+});
 
 router.beforeEach((to, from, next) => {
   /// 开启加载条
@@ -33,16 +37,23 @@ router.beforeEach((to, from, next) => {
         .then(async res => {
           const roles = res.data.roles;
           /// 根据角色生成可访问路由表
-          await store.dispatch("generateRouters", { roles });
+          await store.dispatch("generateRouters", {
+            roles
+          });
           /// 添加到 router
           router.addRoutes(store.getters.addRouters);
           /// hack方法 确保addRoutes已完成
-          next({ ...to, replace: true });
+          next({
+            ...to,
+            replace: true
+          });
         })
         .catch(async err => {
           await store.dispatch("fontLogout");
           alert(err || "认证失败，请重新登陆");
-          next({ path: "/" });
+          next({
+            path: "/"
+          });
         });
       // }
     }

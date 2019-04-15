@@ -1,4 +1,4 @@
-import "../plugins/axios";
+import "@/plugins/axios";
 const _axios = axios;
 
 export default {
@@ -9,13 +9,15 @@ export default {
   getStudentInfoById(data) {
     return _axios.post("/getStudentInfoById", data);
   },
-  getPaperPoint(data){
-    return _axios.post("/getPaperPoint",data)
+  getPaperPoint(data) {
+    return _axios.post("/getPaperPoint", data)
   }
 };
 
 export function login(loginForm) {
-  return _axios.post("/login", { ...loginForm });
+  return _axios.post("/login", {
+    ...loginForm
+  });
 }
 
 export function getUserInfo() {

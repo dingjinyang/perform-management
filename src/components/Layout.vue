@@ -72,9 +72,13 @@
     </v-toolbar>
     <v-content>
       <v-container fluid>
-        <v-fade-transition>
-          <router-view/>
-        </v-fade-transition>
+        <!-- <v-fade-transition> -->
+        <transition name="fade-transform" mode="out-in">
+          <keep-alive>
+            <router-view/>
+          </keep-alive>
+        </transition>
+        <!-- </v-fade-transition> -->
       </v-container>
     </v-content>
   </v-app>
@@ -82,6 +86,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { log } from "util";
 
 export default {
   props: {
@@ -120,7 +125,8 @@ export default {
         .finally(() => {});
     },
     routerPush(path) {
-      this.$router.push(path);
+      console.log(this.permissionRouters);
+      this.$router.push({ path });
     },
     routerHome() {
       this.$router.push("/");
@@ -130,6 +136,7 @@ export default {
     ...mapGetters(["permissionRouters"])
   },
   mounted() {
+    console.log(this.permissionRouters);
     this.items = this.permissionRouters.filter(item => !item.hideInMenu);
     this.items.forEach(item => {
       if (item.children) {

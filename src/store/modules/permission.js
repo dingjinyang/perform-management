@@ -12,7 +12,9 @@ const permission = {
     }
   },
   actions: {
-    async generateRouters({ commit }, data) {
+    async generateRouters({
+      commit
+    }, data) {
       commit("SET_ROUTERS", await generateRouters(data));
     }
   }
@@ -41,7 +43,9 @@ const hasPermission = (roles, route) => {
 const asyncFilterRouter = (routers, roles) => {
   let result = [];
   routers.forEach(item => {
-    const temp = { ...item };
+    const temp = {
+      ...item
+    };
     if (hasPermission(roles, temp)) {
       if (temp.children) {
         temp.children = asyncFilterRouter(temp.children, roles);
@@ -59,8 +63,11 @@ const asyncFilterRouter = (routers, roles) => {
  * @returns {*}
  */
 const generateRouters = async data => {
-  const { roles } = data;
+  const {
+    roles
+  } = data;
   if (roles.includes("admin")) {
+
     return asyncRouterMap;
   } else {
     return await asyncFilterRouter(asyncRouterMap, roles);
