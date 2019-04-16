@@ -1,21 +1,20 @@
 export default [{
-    path: '/personalperformance',
+    path: '/thesis',
     component: () => import('@/components/Layout'),
     meta: {
-        text: '个人业绩填报',
+        text: '论文',
         icon: "keyboard_arrow_up",
         "icon-alt": "keyboard_arrow_down"
     },
     model: false,
     hideInMenu: false,
     children: [{
-        path: "stupaper",
-        name: "Student",
-        component: () => import("@/views/scientific/StudentPaper"),
+        path: 'thesisStandard',
+        name: 'thesisStandard',
+        component: () => import('@/views/thesis/ThesisStandard'),
         meta: {
-            text: "校级优秀毕业设计论文",
+            text: "论文标准",
             icon: "content_copy"
         },
-        children: []
     }]
 }]
