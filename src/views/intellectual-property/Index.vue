@@ -5,141 +5,185 @@
         <v-toolbar-title>知识产权</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">新建</v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.category" label="类别"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.coef" label="业绩点"></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-toolbar>
-      <v-data-table :headers="headers" :items="desserts" class="elevation-1">
+      <v-card>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>产权信息录入</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <v-form v-model="valid">
+          <v-container>
+            <v-layout row wrap justify-space-around>
+              <v-flex md5>
+                <v-text-field
+                  v-model="principalName"
+                  :rules="nameRules"
+                  :counter="10"
+                  label="负责人"
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field v-model="name" :rules="nameRules" :counter="10" label="专利名称" required></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-select v-model="category" :items="items" label="知识产权类别"></v-select>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field v-model="authorNumber" :rules="emailRules" label="授权编号" required></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field v-model="numberOfPeople" :rules="emailRules" label="专利权人数" required></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field v-model="authorUnit" :rules="emailRules" label="授权单位" required></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-menu
+                  ref="menu"
+                  v-model="authorDate"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="date"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="date"
+                      label="授权时间"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="date" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" @click="menu = false">确认</v-btn>
+                    <v-btn flat color="primary" @click="$refs.menu.save(date)">取消</v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </v-flex>
+              <v-flex md5>
+                <v-checkbox v-model="isNationaldefense" label="国防"></v-checkbox>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-form>
+        <v-layout justify-center>
+          <v-btn color="info">计算总业绩点</v-btn>
+        </v-layout>
+      </v-card>
+    </v-card>
+    <v-card style="margin-top:50px">
+      <v-toolbar flat color="white">
+        <v-toolbar-title>业绩分配情况</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+      </v-toolbar>
+      <v-data-table :headers="headers" :items="tableData" :hide-actions="true" class="elevation-1">
         <template v-slot:items="props">
-          <td class="text-xs-center" style="width:50%;">{{ props.item.category }}</td>
-          <td class="text-xs-center">{{ props.item.coef }}</td>
+          <td class="text-xs-center" style="width:50%;">{{ props.item.name }}</td>
+          <td class="text-xs-center">{{ props.item.department }}</td>
+          <td class="text-xs-center">{{ props.item.performance }}</td>
+          <td class="text-xs-center">{{ props.item.remark }}</td>
           <td class="justify-center layout px-0">
-            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
           </td>
         </template>
       </v-data-table>
+
+      <v-layout justify-end>
+        <v-btn fab small color="cyan">
+          <v-icon color="white">person_add</v-icon>
+        </v-btn>
+      </v-layout>
     </v-card>
+    <v-layout justify-end>
+      <v-btn color="info" @click="saveInfo">保存项目信息</v-btn>
+    </v-layout>
   </div>
 </template>
 
 
 <script>
+import { log } from "util";
 export default {
-  name: "ThesisStandard",
+  name: "Index",
   data() {
     return {
-      dialog: false,
-      desserts: [],
-      editedIndex: -1,
-      formTitle: "编辑",
-      editedItem: {
-        title: "",
-        coef: 0
-      },
-      defaultItem: {
-        title: "",
-        coef: 0
-      },
+      date: new Date().toISOString().substr(0, 10),
+      menu: false,
+      modal: false,
+      menu2: false,
+      valid: false,
+      firstname: "",
+      lastname: "",
+      nameRules: [
+        v => !!v || "Name is required",
+        v => v.length <= 10 || "Name must be less than 10 characters"
+      ],
+      email: "",
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
+      items: ["选项一", "选项二", "选项三", "选项四"],
+      principalName: "丁二",
+      name: "专利",
+      category: "",
+      authorNumber: "",
+      numberOfPeople: 1,
+      authorUnit: "",
+      authorDate: "",
+      isNationaldefense: false,
       headers: [
         {
-          text: "评判标准",
+          text: "姓名",
           align: "center",
-          sortable: false,
-          value: "category"
+          value: "name"
         },
-        { text: "业绩点系数", align: "center", value: "coef" }
+        {
+          text: "部门",
+          align: "center",
+          value: "department"
+        },
+        {
+          text: "业绩点",
+          align: "center",
+          value: "performance"
+        },
+        {
+          text: "备注",
+          align: "center",
+          value: "remark"
+        }
       ],
-      desserts: [
+      tableData: [
         {
-          category: "国际发明专利（PCT/美国专利等）",
-          coef: 300
-        },
-        {
-          category: "国防发明专利",
-          coef: 150
-        },
-        {
-          category: "发明专利",
-          coef: 120
-        },
-        {
-          category: "实用新型专利",
-          coef: 20
-        },
-        {
-          category: "外观设计专利",
-          coef: 16
-        },
-        {
-          category: "软件著作权",
-          coef: 16
+          name: "丁二",
+          department: "中原工学院",
+          performance: -1,
+          remark: "辣鸡"
         }
       ]
     };
   },
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
-  },
   methods: {
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+    saveInfo() {
+      //todo
+      console.log("保存项目信息");
     },
-
     deleteItem(item) {
-      const index = this.desserts.indexOf(item);
+      //todo
+      const index = this.tableData.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
-        this.desserts.splice(index, 1);
-    },
-    close() {
-      this.dialog = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
-    },
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-      this.close();
-    },
-    getTableData() {}
-  },
-  mounted() {
-    this.getTableData();
+        this.tableData.splice(index, 1);
+    }
   }
 };
 </script>

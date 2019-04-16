@@ -9,8 +9,16 @@ export default [{
     model: false,
     hideInMenu: false,
     children: [{
-        path: 'intellectual-property',
+        path: 'intellectualProperty',
         name: 'intellectual-property',
+        component: () => import('@/views/intellectual-property/Index'),
+        meta: {
+            text: "知识产权",
+            icon: "content_copy"
+        },
+    }, {
+        path: 'intellectualPropertyRegular',
+        name: 'intellectual-propertyRegular',
         component: () => import('@/views/intellectual-property/IntellectualPropertyStandard'),
         meta: {
             text: "知识产权标准",
