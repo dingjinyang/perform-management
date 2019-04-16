@@ -26,7 +26,7 @@ export default [{
         },
     }, {
         path: 'regular',
-        name: 'regular',
+        name: 'intellectualPropertyRegular',
         component: () => import('@/views/intellectual-property/Regular'),
         meta: {
             text: "知识产权规则",

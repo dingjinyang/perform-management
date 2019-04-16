@@ -3,6 +3,13 @@
     <v-card>
       <v-toolbar flat color="white">
         <v-toolbar-title>知识产权</v-toolbar-title>
+        <v-toolbar-items>
+          <v-btn
+            color="primary"
+            flat
+            @click="$router.push({name:'intellectualPropertyRegular'})"
+          >查看规则</v-btn>
+        </v-toolbar-items>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
       </v-toolbar>
@@ -83,8 +90,11 @@
       <v-toolbar flat color="white">
         <v-toolbar-title>业绩分配情况</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-spacer></v-spacer>
       </v-toolbar>
+      <div class="text-left" style="margin:10px">
+        <v-chip label color="green accent-3" text-color="black">业绩点: x</v-chip>
+        <v-chip label color="green accent-3" text-color="black">待分配: x</v-chip>
+      </div>
       <v-data-table :headers="headers" :items="tableData" :hide-actions="true" class="elevation-1">
         <template v-slot:items="props">
           <td class="text-xs-center" style="width:50%;">{{ props.item.name }}</td>

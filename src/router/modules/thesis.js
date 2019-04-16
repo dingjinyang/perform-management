@@ -16,5 +16,13 @@ export default [{
             text: "论文标准",
             icon: "content_copy"
         },
+    }, {
+        path: 'ThesisCoefTable',
+        name: 'ThesisCoefTable',
+        component: () => import('@/views/thesis/ThesisCoefTable'),
+        meta: {
+            text: "论文系数表",
+            icon: "content_copy"
+        },
     }]
 }]
