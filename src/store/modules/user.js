@@ -1,5 +1,13 @@
-import { login, getUserInfo, logout } from '@/api/user';
-import { getToken, setToken, removeToken } from '@/util/token';
+import {
+  login,
+  getUserInfo,
+  logout
+} from '@/api/user';
+import {
+  getToken,
+  setToken,
+  removeToken
+} from '@/utils/token';
 
 const user = {
   state: {
@@ -24,7 +32,9 @@ const user = {
      * @param {*} commit commit
      * @param loginForm 用户信息
      */
-    login({ commit }, loginForm) {
+    login({
+      commit
+    }, loginForm) {
       return new Promise((resolve, reject) => {
         login(loginForm)
           .then(res => {
@@ -43,7 +53,9 @@ const user = {
      * @param commit
      * @returns {Promise<any>}
      */
-    getUserInfo({ commit }) {
+    getUserInfo({
+      commit
+    }) {
       return new Promise((resolve, reject) => {
         getUserInfo()
           .then(res => {
@@ -67,7 +79,9 @@ const user = {
      * @param commit
      * @returns {Promise<void>}
      */
-    fontLogout({ commit }) {
+    fontLogout({
+      commit
+    }) {
       return new Promise(resolve => {
         logout().then(res => {
           if (res.code === 200) {

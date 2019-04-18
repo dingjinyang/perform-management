@@ -1,73 +1,99 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
-    <side-bar class="sidebar-container"/>
-    <div class="main-container" id="appMain">
-      <nav-bar/>
-      <app-main/>
-    </div>
-  </div>
+  <v-app>
+    <v-navigation-drawer app fixed :clipped="$vuetify.breakpoint.mdAndUp" v-model="drawer">
+      <!-- <v-list>
+        <template v-for="item in items">
+          <v-layout row v-if="item.heading" align-center :key="item.heading">
+            <v-flex xs6>
+              <v-subheader v-if="item.heading">{{ item.heading }}</v-subheader>
+            </v-flex>
+          </v-layout>
+          <v-list-group
+            v-else-if="item.children"
+            v-model="item.model"
+            :key="item.meta.text"
+            :prepend-icon="item.model ? item.meta.icon : item.meta['icon-alt']"
+            append-icon
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.meta.text }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+            <v-list-tile
+              v-for="(child, i) in item.children"
+              :key="i"
+              @click="routerPush(child.path)"
+            >
+              <v-list-tile-action v-if="child.meta.icon">
+                <v-icon>{{ child.meta.icon }}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ child.meta.text }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+          <v-list-tile v-else @click="routerPush(item.path)" :key="item.meta.text">
+            <v-list-tile-action>
+              <v-icon>{{ item.meta.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item.meta.text }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </template>
+      </v-list>-->
+      <side-bar style="height:100%;"></side-bar>
+    </v-navigation-drawer>
+    <nav-bar app fixed @handleDrawer="(data)=>this.drawer=data"></nav-bar>
+    <v-content>
+      <v-container fluid>
+        <app-main></app-main>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-import { NavBar, SideBar, AppMain } from "./components";
-import ResizeMixin from "./mixin/ResizeHandler";
+import { mapGetters } from "vuex";
+import { log } from "util";
+import { NavBar, AppMain, SideBar } from "./components";
 export default {
-  name: "Layout",
+  props: {
+    source: String
+  },
   components: {
     NavBar,
-    SideBar,
-    AppMain
+    AppMain,
+    SideBar
   },
-  data: function() {
+  data() {
     return {
-      greeting: "Hello"
+      drawer: false,
+      items: []
     };
   },
-  mixins: [ResizeMixin],
-  computed: {
-    sidebar() {
-      return this.$store.state.app.sidebar;
-    },
-    device() {
-      return this.$store.state.app.device;
-    },
-    classObj() {
-      return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === "mobile"
-      };
+  methods: {
+    routerPush(path) {
+      console.log(this.permissionRouters);
+      this.$router.push({ path });
     }
   },
-  methods: {
-    handleClickOutside() {
-      this.$store.dispatch("CloseSideBar", { withoutAnimation: false });
-    }
+  computed: {
+    ...mapGetters(["permissionRouters"])
+  },
+  mounted() {
+    console.log(this.permissionRouters);
+    this.items = this.permissionRouters.filter(item => !item.hideInMenu);
+    this.items.forEach(item => {
+      if (item.children) {
+        item.children.forEach(child => {
+          child.path = `${item.path}/${child.path}`;
+        });
+      }
+    });
   }
 };
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-@import "@/styles/mixin.scss";
-.app-wrapper {
-  @include clearfix;
-  position: relative;
-  height: 100%;
-  width: 100%;
-  &.mobile.openSidebar {
-    position: fixed;
-    top: 0;
-  }
-}
-.drawer-bg {
-  background: #000;
-  opacity: 0.3;
-  width: 100%;
-  top: 0;
-  height: 100%;
-  position: absolute;
-  z-index: 999;
-}
-</style>

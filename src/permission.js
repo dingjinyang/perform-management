@@ -4,7 +4,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import {
   getToken
-} from "./util/token";
+} from "./utils/token";
 
 NProgress.configure({
   showSpinner: false

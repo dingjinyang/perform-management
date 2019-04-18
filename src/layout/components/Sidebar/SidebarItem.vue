@@ -1,17 +1,5 @@
 <template>
-  <div v-if="!item.hidden" class="menu-wrapper">
-    <v-list-group
-      v-model="item.model"
-      :key="item.meta.text"
-      :prepend-icon="item.model ? item.meta.icon : item.meta['icon-alt']"
-      append-icon
-    >
-      <v-list-tile slot="activator">
-        <v-list-tile-content>
-          <v-list-tile-title>{{ item.meta.text }}</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-    </v-list-group>
+  <div v-if="!item.hideInMenu" class="menu-wrapper">
     <template
       v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow"
     >
@@ -46,6 +34,7 @@ import path from "path";
 import { isExternal } from "@/utils/validate";
 import Item from "./Item";
 import AppLink from "./Link";
+import { log } from "util";
 
 export default {
   name: "SidebarItem",
@@ -74,7 +63,7 @@ export default {
   methods: {
     hasOneShowingChild(children = [], parent) {
       const showingChildren = children.filter(item => {
-        if (item.hidden) {
+        if (item.hideInMenu) {
           return false;
         } else {
           // Temp set(will be used if only has one showing child)

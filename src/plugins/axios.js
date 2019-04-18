@@ -1,6 +1,9 @@
 import Vue from "vue";
 import axios from "axios";
-import { getToken, setToken } from "../util/token";
+import {
+  getToken,
+  setToken
+} from "../utils/token";
 
 axios.defaults.headers.common["Authorization"] = getToken();
 
@@ -14,12 +17,12 @@ let config = {
 const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
-  function(config) {
+  function (config) {
     // Do something before request is sent
     console.info(config);
     return config;
   },
-  function(error) {
+  function (error) {
     // Do something with request error
     console.error(error);
     return Promise.reject(error);
@@ -28,19 +31,19 @@ _axios.interceptors.request.use(
 
 // Add a response interceptor
 _axios.interceptors.response.use(
-  function(response) {
+  function (response) {
     // Do something with response data
     console.info(response);
     return response.data;
   },
-  function(error) {
+  function (error) {
     // Do something with response error
     console.error(error);
     return Promise.reject(error);
   }
 );
 
-Plugin.install = function(Vue) {
+Plugin.install = function (Vue) {
   Vue.axios = _axios;
   window.axios = _axios;
   Object.defineProperties(Vue.prototype, {

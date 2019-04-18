@@ -8,10 +8,25 @@ import "@/permission";
 import "./mock";
 import "vuetify/dist/vuetify.min.css";
 import api from "./api";
-import '@/styles/index.scss'
 Vue.prototype.$api = api;
 Vue.config.productionTip = false;
+import '@/styles/element-variable.scss'
+import '@/styles/index.scss'
+import {
+  Menu,
+  Submenu,
+  MenuItem,
+  MenuItemGroup,
 
+}
+from 'element-ui';
+
+Vue.use(Menu);
+Vue.use(Submenu);
+Vue.use(MenuItem);
+Vue.use(MenuItemGroup);
+
+import '@/icons';
 new Vue({
   router,
   store,

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build --mode production"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -20,8 +20,10 @@
     "@vue/cli-plugin-babel": "^3.4.0",
     "@vue/cli-service": "^3.4.0",
     "axios": "^0.18.0",
+    "element-ui": "^2.7.2",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
+    "screenfull": "^4.2.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "svg-sprite-loader": "^4.1.3",

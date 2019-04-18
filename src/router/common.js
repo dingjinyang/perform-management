@@ -12,7 +12,7 @@ export default [{
     hideInMenu: true
 }, {
     path: "/",
-    component: () => import('@/components/Layout'),
+    component: () => import('@/layout/Layout'),
     redirect: "dashboard",
     name: "Dashboard",
     hideInMenu: true,

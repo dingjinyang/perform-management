@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper">
+  <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">
     <el-menu
       :default-active="$route.path"
       :collapse="isCollapse"
@@ -37,9 +37,6 @@ export default {
     isCollapse() {
       return !this.sidebar.opened;
     }
-  },
-  mounted() {
-    console.log(this.sidebar);
   }
 };
 </script>

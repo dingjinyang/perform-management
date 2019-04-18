@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout'
+import Layout from '@/layout/Layout'
 
 export default [{
   path: "/scientific",
@@ -6,8 +6,7 @@ export default [{
   name: "Scientific",
   meta: {
     text: "科研论文",
-    icon: "keyboard_arrow_up",
-    "icon-alt": "keyboard_arrow_down"
+    icon: "page",
   },
   model: false,
   hideInMenu: false,
@@ -34,6 +33,7 @@ export default [{
   name: "Personal",
   hideInMenu: true,
   children: [{
+    hideInMenu: true,
     path: "/personal",
     component: () => import("@/views/Personal")
   }]
