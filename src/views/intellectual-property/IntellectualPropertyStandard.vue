@@ -28,8 +28,8 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+              <v-btn color="error" flat @click="close">取消</v-btn>
+              <v-btn color="primary" flat @click="save">保存</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -39,8 +39,12 @@
           <td class="text-xs-center" style="width:50%;">{{ props.item.category }}</td>
           <td class="text-xs-center">{{ props.item.coef }}</td>
           <td class="justify-center layout px-0">
-            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-            <v-icon small @click="deleteItem(props.item)">delete</v-icon>
+            <v-btn small fab color="cyan" @click="editItem(props.item)">
+              <v-icon color="white">edit</v-icon>
+            </v-btn>
+            <v-btn small fab color="#ff3a3a" @click="deleteItem(props.item)">
+              <v-icon color="white">delete</v-icon>
+            </v-btn>
           </td>
         </template>
       </v-data-table>

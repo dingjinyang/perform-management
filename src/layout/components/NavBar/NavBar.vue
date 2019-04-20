@@ -1,11 +1,16 @@
 <template>
   <div>
-    <v-toolbar app color="blue darken-3" dark :clipped-left="$vuetify.breakpoint.mdAndUp" fixed>
+    <v-toolbar
+      app
+      :color="variables.navbarBgColor"
+      dark
+      :clipped-left="$vuetify.breakpoint.mdAndUp"
+      fixed
+    >
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
         <v-toolbar-side-icon @click.stop="handleDrawer"></v-toolbar-side-icon>
         <span class="hidden-sm-and-down" @click="routerHome()">科研业绩量化系统</span>
       </v-toolbar-title>
-      <!-- <breadcrumb/> -->
       <v-spacer></v-spacer>
       <screen-full/>
       <v-menu center nudge-bottom="15" offset-y transition="scale-transition">
@@ -70,6 +75,7 @@
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb/index";
 import ScreenFull from "@/components/screen-full/index";
+import variables from "@/styles/variables.scss";
 export default {
   props: {
     source: String
@@ -121,6 +127,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    variables() {
+      return variables;
+    }
   },
   methods: {
     logout() {

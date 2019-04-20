@@ -3,19 +3,12 @@
     <v-card>
       <v-toolbar flat color="white">
         <v-toolbar-title>知识产权</v-toolbar-title>
-        <v-toolbar-items>
-          <v-btn
-            color="primary"
-            flat
-            @click="$router.push({name:'intellectualPropertyRegular'})"
-          >查看规则</v-btn>
-        </v-toolbar-items>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
       </v-toolbar>
       <v-card>
         <v-toolbar flat color="white">
-          <v-toolbar-title>产权信息录入</v-toolbar-title>
+          <v-toolbar-title>项目信息录入</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
         </v-toolbar>
@@ -24,56 +17,25 @@
             <v-layout row wrap justify-space-around>
               <v-flex md5>
                 <v-text-field
-                  v-model="defaultForm.principalName"
-                  :rules="validRules.principalName"
-                  :counter="10"
-                  label="负责人"
+                  v-model="defaultForm.projectName"
+                  :rules="validRules.projectName"
+                  label="项目名称"
                   required
                 ></v-text-field>
               </v-flex>
               <v-flex md5>
                 <v-text-field
-                  v-model="defaultForm.name"
-                  :rules="validRules.name"
-                  :counter="10"
-                  label="专利名称"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex md5>
-                <v-select
-                  v-model="defaultForm.category"
-                  :rules="validRules.category"
-                  :items="items"
-                  item-text="state"
-                  item-value="abbr"
-                  label="知识产权类别"
-                  persistent-hint
-                  return-object
-                  single-line
-                ></v-select>
-              </v-flex>
-              <v-flex md5>
-                <v-text-field
-                  v-model="defaultForm.authorNumber"
-                  :rules="validRules.authorNumber"
-                  label="授权编号"
+                  v-model="defaultForm.projectSource"
+                  :rules="validRules.projectSource"
+                  label="项目来源"
                   required
                 ></v-text-field>
               </v-flex>
               <v-flex md5>
                 <v-text-field
-                  v-model="defaultForm.numberOfPeople"
-                  :rules="validRules.numberOfPeople"
-                  label="专利权人数"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex md5>
-                <v-text-field
-                  v-model="defaultForm.authorUnit"
-                  :rules="validRules.authorUnit"
-                  label="授权单位"
+                  v-model="defaultForm.projectNumber"
+                  :rules="validRules.projectNumber"
+                  label="项目编号"
                   required
                 ></v-text-field>
               </v-flex>
@@ -89,19 +51,25 @@
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="defaultForm.authorDate"
-                      label="发表时间"
-                      prepend-icon="event"
+                      v-model="defaultForm.projectDate"
+                      label="立项时间"
+                      :rules="validRules.projectDate"
                       readonly
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="defaultForm.authorDate" @input="menu = false"></v-date-picker>
+                  <v-date-picker v-model="defaultForm.projectDate" @input="menu = false"></v-date-picker>
                 </v-menu>
               </v-flex>
               <v-flex md5>
-                <v-checkbox v-model="defaultForm.isNationaldefense" label="国防"></v-checkbox>
+                <v-text-field
+                  v-model="defaultForm.expenditure"
+                  :rules="validRules.expenditure"
+                  label="项目经费（万元）"
+                  required
+                ></v-text-field>
               </v-flex>
+              <v-flex md5></v-flex>
             </v-layout>
           </v-container>
         </v-form>
@@ -148,37 +116,25 @@
 
 <script>
 export default {
-  name: "Thesis",
+  name: "LongitudinalProject",
   data() {
     return {
-      date: new Date().toISOString().substr(0, 10),
       menu: false,
       modal: false,
       valid: false,
       validRules: {
-        principalName: [v => !!v || "请填写负责人名称"],
-        name: [v => !!v || "请填写专利名称"],
-        category: [v => v !== "" || "请填写知识产权类别"],
-        authorNumber: [v => !!v || "请填授权编号"],
-        numberOfPeople: [v => !!v || "请填专利权人数"],
-        authorUnit: [v => !!v || "请填写授权单位"],
-        authorDate: [v => !!v || "请填写授权时间"]
+        projectName: [v => !!v || "请填写项目名称"],
+        projectSource: [v => !!v || "请填写项目来源"],
+        projectNumber: [v => !!v || "请填写项目编号"],
+        projectDate: [v => !!v || "请填写立项时间"],
+        expenditure: [v => !!v || "请填写项目经费"]
       },
-      items: [
-        { state: "选项一", abbr: "选项一" },
-        { state: "选项二", abbr: "选项二" },
-        { state: "选项三", abbr: "选项三" },
-        { state: "选项四", abbr: "选项四" }
-      ],
       defaultForm: {
-        principalName: "丁金洋",
-        name: "",
-        category: "",
-        authorNumber: 2,
-        numberOfPeople: 1,
-        authorUnit: "中原工学院",
-        authorDate: new Date().toISOString().substr(0, 10),
-        isNationaldefense: false
+        projectName: "业绩量化系统",
+        projectSource: "中原工学院",
+        projectNumber: "201904",
+        projectDate: new Date().toISOString().substr(0, 10),
+        expenditure: 2
       },
       headers: [
         {
@@ -204,10 +160,10 @@ export default {
       ],
       tableData: [
         {
-          name: "丁二",
+          name: "丁金洋",
           department: "中原工学院",
           performance: -1,
-          remark: "辣鸡"
+          remark: "无"
         }
       ]
     };

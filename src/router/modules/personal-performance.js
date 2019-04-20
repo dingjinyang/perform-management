@@ -8,14 +8,53 @@ export default [{
     model: false,
     hideInMenu: false,
     children: [{
-        path: "stupaper",
-        name: "Student",
-        component: () => import("@/views/scientific/StudentPaper"),
+        path: 'longitudinalProject',
+        name: 'longitudinalProject',
+        component: () => import('@/views/personal-performance/LongitudinalProject'),
         meta: {
-            text: "校级优秀毕业设计论文",
-            icon: "school"
-        },
-        children: []
+            text: '纵向立项',
+            icon: 'zongxiang'
+        }
+    }, {
+        path: 'standardPerformanceMeasurement',
+        name: 'standardPerformanceMeasurement',
+        component: () => import('@/views/personal-performance/StandardPerformanceMeasurement'),
+        meta: {
+            text: '标准业绩量化',
+            icon: 'regular'
+        }
+    }, {
+        path: 'QuantificationOfWorkPerformance',
+        name: 'QuantificationOfWorkPerformance',
+        component: () => import('@/views/personal-performance/QuantificationOfWorkPerformance'),
+        meta: {
+            text: '著作业绩量化',
+            icon: 'quantification'
+        }
+    }, {
+        path: 'projectConcludingAndAppraise',
+        name: 'projectConcludingAndAppraise',
+        component: () => import('@/views/personal-performance/ProjectConcludingAndAppraise'),
+        meta: {
+            text: '项目结题/评价',
+            icon: 'over'
+        }
+    }, {
+        path: 'rewordForScientificResearch',
+        name: 'rewordForScientificResearch',
+        component: () => import('@/views/personal-performance/RewordForScientificResearch'),
+        meta: {
+            text: '科研奖励',
+            icon: 'prize'
+        }
+    }, {
+        path: 'scientificAndSubjectPlatform',
+        name: 'scientificAndSubjectPlatform',
+        component: () => import('@/views/personal-performance/ScientificAndSubjectPlatform'),
+        meta: {
+            text: '科研/学科平台',
+            icon: 'platform'
+        }
     }, {
         path: 'intellectual',
         component: () => import('@/views/intellectual-property/Index'),
@@ -33,16 +72,14 @@ export default [{
             name: 'intellectual-property',
             component: () => import('@/views/intellectual-property/intellectualProperty'),
             meta: {
-                text: "知识产权",
-                icon: "content_copy"
+                text: "知识产权"
             },
         }, {
             path: 'intellectualPropertyRegular',
             name: 'intellectual-propertyRegular',
             component: () => import('@/views/intellectual-property/IntellectualPropertyStandard'),
             meta: {
-                text: "知识产权标准",
-                icon: "content_copy"
+                text: "知识产权标准"
             },
         }, {
             path: 'regular',
@@ -50,7 +87,6 @@ export default [{
             component: () => import('@/views/intellectual-property/Regular'),
             meta: {
                 text: "知识产权规则",
-                icon: "content_copy"
             },
         }]
     }, {
@@ -66,12 +102,18 @@ export default [{
         model: false,
         hideInMenu: false,
         children: [{
+            path: 'Thesis',
+            name: 'Thesis',
+            component: () => import('@/views/thesis/Thesis'),
+            meta: {
+                text: "论文",
+            },
+        }, {
             path: 'thesisStandard',
             name: 'thesisStandard',
             component: () => import('@/views/thesis/ThesisStandard'),
             meta: {
                 text: "论文标准",
-                icon: "content_copy"
             },
         }, {
             path: 'ThesisCoefTable',
@@ -79,7 +121,6 @@ export default [{
             component: () => import('@/views/thesis/ThesisCoefTable'),
             meta: {
                 text: "论文系数表",
-                icon: "content_copy"
             },
         }]
     }]

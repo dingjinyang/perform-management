@@ -5,6 +5,7 @@
     >
       <app-link :to="resolvePath(onlyOneChild.path)">
         <el-menu-item
+          v-waves
           :index="resolvePath(onlyOneChild.path)"
           :class="{'submenu-title-noDropdown':!isNest}"
         >
@@ -94,3 +95,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+* {
+  font-size: 14px;
+  font-weight: 500;
+}
+</style>
+
