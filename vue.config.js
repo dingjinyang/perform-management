@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production' ?
-        '/blog/' : '/',
+        '/perform-management/' : '/',
     outputDir: 'dist',
     lintOnSave: false,
     chainWebpack: config => {

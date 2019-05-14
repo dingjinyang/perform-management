@@ -6,6 +6,17 @@
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
       </v-toolbar>
+      <div>
+        <v-tabs v-model="active" color="cyan" @change="next(this)" dark slider-color="yellow">
+          <v-tab v-for="(item,index) in tabsData" :key="index" ripple>{{item.title}}</v-tab>
+          <v-tab-item v-for="(item,index) in tabsData" :key="index">
+            <v-card flat>
+              <component is="currentView"></component>
+            </v-card>
+          </v-tab-item>
+        </v-tabs>
+      </div>
+
       <v-card>
         <v-toolbar flat color="white">
           <v-toolbar-title>项目结题、评价</v-toolbar-title>
@@ -123,6 +134,7 @@
         </v-layout>
       </v-card>
     </v-card>
+
     <v-card style="margin-top:50px">
       <v-toolbar flat color="white">
         <v-toolbar-title>业绩分配情况</v-toolbar-title>
@@ -164,6 +176,29 @@ export default {
   name: "ProjectConcludingAndAppraise",
   data() {
     return {
+      active: null,
+      tabsData: [
+        {
+          title: "纵向评价",
+          componentName: ""
+        },
+        {
+          title: "横向评价",
+          componentName: ""
+        },
+        {
+          title: "结题"
+        }
+      ],
+      next(data) {
+        console.log(this.active);
+        const active = parseInt(this.active);
+        this.active = active < 2 ? active + 1 : 0;
+      },
+      currentTab: {
+        title: "纵向评价",
+        componentName: ""
+      },
       valid: false,
       validRules: {
         mainpeople: [v => !!v || "请填写负责人姓名"],
