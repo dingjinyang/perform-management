@@ -8,6 +8,34 @@ export default [{
     model: false,
     hideInMenu: false,
     children: [{
+        path: 'horizontal-project',
+        name: 'horizontalProject',
+        component: () => import('@/views/personal-performance/natural-science/horizontal-project/Index'),
+        redirect: {
+            path: '/personalperformance/horizontal-project/horizontal-project-regular'
+        },
+        model: false,
+        hideInMenu: false,
+        meta: {
+            text: '横向立项',
+            icon: 'regular'
+        },
+        children: [{
+            path: 'horizontal-project-regular',
+            name: 'horizontalProjectRegular',
+            component: () => import('@/views/personal-performance/natural-science/horizontal-project/Regular'),
+            meta: {
+                text: '横向立项标准',
+            },
+        }, {
+            path: 'horizontal-project',
+            name: 'horizontalProject',
+            component: () => import('@/views/personal-performance/natural-science/horizontal-project/HorizontalProject'),
+            meta: {
+                text: '横向立项',
+            },
+        }]
+    }, {
         path: 'nartualScience',
         name: 'nartualScience',
         component: () => import('@/views/personal-performance/natural-science/Index'),
