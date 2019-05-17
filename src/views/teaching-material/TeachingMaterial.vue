@@ -2,20 +2,13 @@
   <div>
     <v-card>
       <v-toolbar flat color="white">
-        <v-toolbar-title>论文</v-toolbar-title>
-        <v-toolbar-items>
-          <v-btn
-            color="primary"
-            flat
-            @click="$router.push({name:'intellectualPropertyRegular'})"
-          >查看规则</v-btn>
-        </v-toolbar-items>
+        <v-toolbar-title>教材</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
       </v-toolbar>
       <v-card>
         <v-toolbar flat color="white">
-          <v-toolbar-title>论文信息录入</v-toolbar-title>
+          <v-toolbar-title>教材信息录入</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
         </v-toolbar>
@@ -24,73 +17,20 @@
             <v-layout row wrap justify-space-around>
               <v-flex md5>
                 <v-text-field
-                  v-model="defaultForm.principalName"
-                  :rules="validRules.principalName"
-                  :counter="10"
-                  label="负责人"
+                  v-model="defaultForm.princlName"
+                  :rules="validRules.princlName"
+                  label="负责人名称"
                   required
                 ></v-text-field>
               </v-flex>
               <v-flex md5>
                 <v-select
-                  v-model="defaultForm.publishLevel"
-                  :rules="validRules.publishLevel"
-                  :items="publishLevelItems"
+                  v-model="defaultForm.departMentName"
+                  :rules="validRules.departMentName"
+                  :items="departMentItems"
                   item-text="state"
                   item-value="abbr"
-                  label="发表等级"
-                  persistent-hint
-                  return-object
-                  single-line
-                ></v-select>
-              </v-flex>
-              <v-flex md5>
-                <v-menu
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="defaultForm.publishDate"
-                      label="发表时间"
-                      :rules="validRules.publishDate"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="defaultForm.publishDate" @input="menu = false"></v-date-picker>
-                </v-menu>
-              </v-flex>
-              <v-flex md5>
-                <v-text-field
-                  v-model="defaultForm.wordsNumber"
-                  :rules="validRules.wordsNumber"
-                  :counter="10"
-                  label="论文字数"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex md5>
-                <v-text-field
-                  v-model="defaultForm.thesisName"
-                  :rules="validRules.thesisName"
-                  label="论文名称"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex md5>
-                <v-select
-                  v-model="defaultForm.coef"
-                  :rules="validRules.coef"
-                  :items="coefItems"
-                  item-text="state"
-                  item-value="abbr"
-                  label="系数"
+                  label="部门名称"
                   persistent-hint
                   return-object
                   single-line
@@ -98,9 +38,41 @@
               </v-flex>
               <v-flex md5>
                 <v-text-field
-                  v-model="defaultForm.publisJournals"
-                  :rules="validRules.publisJournals"
-                  label="发表刊物"
+                  v-model="defaultForm.name"
+                  :rules="validRules.name"
+                  label="姓名"
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field
+                  v-model="defaultForm.jobTitle"
+                  :rules="validRules.jobTitle"
+                  label="职称"
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field
+                  v-model="defaultForm.materialName"
+                  :rules="validRules.materialName"
+                  label="教材名称"
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field
+                  v-model="defaultForm.ISBN"
+                  :rules="validRules.ISBN"
+                  label="书号（ISBN）"
+                  required
+                ></v-text-field>
+              </v-flex>
+              <v-flex md5>
+                <v-text-field
+                  v-model="defaultForm.publichHouse"
+                  :rules="validRules.publichHouse"
+                  label="书号（ISBN）"
                   required
                 ></v-text-field>
               </v-flex>
@@ -108,9 +80,6 @@
             </v-layout>
           </v-container>
         </v-form>
-        <v-layout justify-center>
-          <v-btn color="info" @click="calculate('form')">计算总业绩点</v-btn>
-        </v-layout>
       </v-card>
     </v-card>
     <v-card style="margin-top:50px">
@@ -119,7 +88,6 @@
         <v-spacer></v-spacer>
       </v-toolbar>
       <div class="text-left" style="margin:10px">
-        <v-chip label color="primary" text-color="white">标准业绩点: x</v-chip>
         <v-chip label color="primary" text-color="white">业绩点: x</v-chip>
         <v-chip label color="primary" text-color="white">待分配: x</v-chip>
       </div>
@@ -152,43 +120,35 @@
 
 <script>
 export default {
-  name: "Index",
+  name: "HorizontalProject",
   data() {
     return {
-      date: new Date().toISOString().substr(0, 10),
       menu: false,
       modal: false,
-      menu2: false,
       valid: false,
       validRules: {
-        principalName: [v => !!v || "请填写负责人名称"],
-        publishLevel: [v => v !== "" || "请选择发表等级"],
-        publishDate: [v => !!v || "请填写发表时间"],
-        wordsNumber: [v => !!v || "请填写字数"],
-        thesisName: [v => !!v || "请填写论文名称"],
-        coef: [v => v !== "" || "请填写系数"],
-        publisJournals: [v => !!v || "请填写发表刊物名称"]
+        princlName: [v => !!v || "请填写负责人"],
+        departMentName: [v => v !== "" || "请选择部门名称"],
+        name: [v => !!v || "请填写姓名"],
+        jobTitle: [v => !!v || "请填写职称"],
+        materialName: [v => !!v || "请填写教材名称"],
+        ISBN: [v => !!v || "请填写ISBN"],
+        publichHouse: [v => !!v || "请填写出版社"]
       },
-      publishLevelItems: [
+      defaultForm: {
+        princlName: "丁金洋",
+        departMentName: "",
+        name: "",
+        jobTitle: "",
+        materialName: "",
+        ISBN: "",
+        publichHouse: ""
+      },
+      departMentItems: [
         { state: "北大核心", abbr: "北大核心" },
         { state: "中原工学院", abbr: "中原工学院" },
         { state: "其他", abbr: "其他" }
       ],
-      coefItems: [
-        { state: "0.3", abbr: "0.3" },
-        { state: "0.5", abbr: "0.5" },
-        { state: "0.6", abbr: "0.6" },
-        { state: "1", abbr: "1" }
-      ],
-      defaultForm: {
-        principalName: "丁金洋",
-        publishLevel: "",
-        publishDate: new Date().toISOString().substr(0, 10),
-        wordsNumber: 0,
-        thesisName: "",
-        coef: "",
-        publisJournals: ""
-      },
       headers: [
         {
           text: "姓名",

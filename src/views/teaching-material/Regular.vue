@@ -16,10 +16,10 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex sm6 md4>
-                    <v-text-field v-model="editedItem.min" label="最小值（万元）"></v-text-field>
+                    <v-text-field v-model="editedItem.coefTerm" label="系数项"></v-text-field>
                   </v-flex>
                   <v-flex sm6 md4>
-                    <v-text-field v-model="editedItem.max" label="最大值（万元）"></v-text-field>
+                    <v-text-field v-model="editedItem.child" label="子项"></v-text-field>
                   </v-flex>
                   <v-flex sm6 md4>
                     <v-text-field v-model="editedItem.coef" label="业绩系数"></v-text-field>
@@ -38,7 +38,8 @@
       </v-toolbar>
       <v-data-table :headers="headers" :items="desserts" show-expand class="elevation-1">
         <template v-slot:items="props">
-          <td class="text-xs-center" style="width:50%;">{{ props.item.range }}</td>
+          <td class="text-xs-center" style="width:50%;">{{ props.item.coefTerm }}</td>
+          <td class="text-xs-center">{{ props.item.child }}</td>
           <td class="text-xs-center">{{ props.item.coef }}</td>
           <td class="justify-center layout px-0">
             <v-btn small fab color="cyan" @click="editItem(props.item)">
@@ -57,51 +58,51 @@
 
 <script>
 export default {
-  name: "ThesisStandard",
+  name: "teachingMaterialRegular",
   data() {
     return {
       dialog: false,
       desserts: [],
       editedIndex: -1,
       editedItem: {
-        max: 0,
-        min: 0,
-        range: "",
+        coefTerm: "",
+        child: "",
         coef: 0
       },
       defaultItem: {
-        max: 0,
-        min: 0,
-        range: "",
+        coefTerm: "",
+        child: "",
         coef: 0
       },
       headers: [
         {
-          text: "项目经费（万元）",
+          text: "系数项",
           align: "center",
           sortable: false,
-          value: "range"
+          value: "coefTerm"
         },
-        { text: "业绩系数", align: "center", value: "coef" }
+        { text: "子项", align: "center", value: "child" },
+        {
+          text: "系数或业绩点",
+          align: "center",
+          vlue: "coef"
+        }
       ],
       desserts: [
         {
-          min: 300,
-          max: 2000,
-          range: "300 ~ 2000",
+          coefTerm: "本校第一主编",
+          child: "执笔部分",
           coef: 1.2
         },
         {
-          min: 80,
-          max: 300,
-          range: "80 ~ 300",
-          coef: 1.1
+          coefTerm: "外校第一主编",
+          child: "主编部分",
+          coef: 1.2
         },
         {
-          min: 0,
-          max: 80,
-          range: "0 ~ 80",
-          coef: 1.0
+          coefTerm: "级别系数",
+          child: "",
+          coef: 1.2
         }
       ]
     };
@@ -131,7 +132,6 @@ export default {
       }, 300);
     },
     save() {
-      this.editedItem.range = this.editedItem.min + " ~ " + this.editedItem.max;
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem);
       } else {
