@@ -23,7 +23,7 @@
     "axios": "^0.18.0",
     "element-ui": "^2.7.2",
     "i18n": "^0.8.3",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.13.1",
     "path-to-regexp": "^3.0.0",
     "sass-loader": "^7.1.0",
     "screenfull": "^4.2.0",
