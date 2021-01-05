@@ -7,7 +7,7 @@
     "build": "vue-cli-service build --mode production"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "js-cookie": "^2.2.0",
     "mockjs": "^1.0.1-beta3",
     "nprogress": "^0.2.0",
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
     "@vue/cli-service": "^3.4.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "element-ui": "^2.7.2",
     "i18n": "^0.8.3",
     "node-sass": "^4.9.0",
